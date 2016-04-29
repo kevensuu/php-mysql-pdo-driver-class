@@ -31,8 +31,8 @@ class Db_mysql_pdo
 	public $dbname = null;
 
 	/**
-	 * @param bool   $debug    是否开启调试，错误信息输出
-	 * @param string $database 数据库类别
+	 * @desc
+	 * @param string $dbname	数据库标识
 	 */
 	public function __construct($dbname = 'default')
 	{
@@ -42,7 +42,7 @@ class Db_mysql_pdo
 
 	/**
 	 * @desc	数据库连接
-	 * @return null|\PDO
+	 * @return null|PDO
 	 */
 	protected function connect()
 	{
@@ -64,7 +64,13 @@ class Db_mysql_pdo
 		}
 	}
 
-
+	/**
+	 * @desc	执行SQL语句
+	 * @param string $sql			SQL语句
+	 * @param array $parameters		需要绑定的参数值
+	 * @param int   $fetchmode
+	 * @return null
+	 */
 	public function query($sql, $parameters = array(), $fetchmode = PDO::FETCH_ASSOC)
 	{
 		$stmt = self::$pdo->prepare($sql);
@@ -107,14 +113,137 @@ class Db_mysql_pdo
 	public function select($tableName, array $fields, $where, array $other = array())
 	{
 		$fields = (!$fields) ? '*' : trim(implode('`,`', $fields), '`');
-
 		$where = $this->formatWhere($where);
+		$other = $this->formatOhterCondition($other);
+		$sql = "select {$fields} from {$tableName} {$where} {$other}";
+		return $this->query($sql);
+	}
+
+	/**
+	 * @desc 添加一条记录
+	 * @param string $tableName 数据库表名
+	 * @param array  $data      需要添加的数据，如：array('field1'=>'value1', 'field2'=>'value2')
+	 * @return int 返回影响行数
+	 */
+	public function insert($tableName, $data)
+	{
+		$fields = '`' . implode('`,`', array_keys($data)) . '`';
+		$values = implode(',', array_fill(0, count($data), '?'));
+		$sql = "INSERT INTO `{$tableName}`({$fields}) VALUES ({$values})";
+		return $this->query($sql, array_values($data));
+	}
+
+	/**
+	 * @desc 添加多条数据
+	 * @param string $tableName 数据库表名
+	 * @param array  $data      需要添加的数据，为一个二维数组，如：$data = array(array('fileld1'=>'value1','fileld2'=>'value2'),array('fileld1'=>'value1','fileld2'=>'value2'))
+	 * @return int 返回影响行数
+	 */
+	public function insertBatch($tableName, $data)
+	{
+		$fields = '`' . implode('`,`', array_keys($data[0])) . '`';
+		$tmp  = array();
+		$tmp2 = array();
+		foreach($data as $value)
+		{
+			$tmp[] = implode(',', array_fill(0, count($value), '?'));
+			foreach($value as $v)
+			{
+				$tmp2[] = $v;
+			}
+		}
+		$values = "(" . implode("),(", $tmp) . ")";
+		$sql = "INSERT INTO `{$tableName}`({$fields}) VALUES {$values}";
+		return $this->query($sql, $tmp2);
+	}
+
+	/**
+	 * @desc 更新
+	 * @param string $tableName 数据库表名
+	 * @param array  $where     更新条件，为 key|value 对应的数组，如：array('id'=>233)
+	 * @param array  $data      更新数据，为 key|value 对应的数组，如：array('field1'=>'value1','field12'=>'value2')
+	 * @param array  $other     参照  formatOhterCondition 中的参数说明
+	 * @return int 返回影响行数
+	 */
+	public function update($tableName, array $where, array $data, array $other=array())
+	{
+		if(!$where || !$data){return false;}
+
+		$tmp1 = $tmp2 = $tmp3 = array();
+
+		// 条件
+		foreach($where as $key=>$value)
+		{
+			$tmp1[] = "{$key}=?";
+			$tmp2[] = $value;
+		}
+		$tmp1 = implode(' and ', $tmp1);
+
+		// 组合更新数据
+		foreach($data as $key=>$value)
+		{
+			$tmp3[] = "`{$key}`='{$value}'";
+		}
+		$tmp3 = implode(',', $tmp3);
 
 		$other = $this->formatOhterCondition($other);
 
-		$sql = "select {$fields} from {$tableName} {$where} {$other}";
+		$sql = "UPDATE `{$tableName}` SET {$tmp3} WHERE {$tmp1} {$other}";
+		return $this->query($sql, $tmp2);
+	}
 
-		return $this->query($sql);
+	/**
+	 * @desc 删除
+	 * @param string $tableName 数据库表名
+	 * @param array  $where     删除条件，为 key|value 对应的数组，如：array('id'=>233)
+	 * @param array  $other     参照  formatOhterCondition 中的参数说明
+	 * @return int 返回影响行数
+	 */
+	public function delete($tableName, array $where, array $other=array())
+	{
+		if(!$where){return false;}
+
+		$tmp1 = $tmp2 = array();
+
+		// 条件
+		foreach($where as $key=>$value)
+		{
+			$tmp1[] = "{$key}=?";
+			$tmp2[] = $value;
+		}
+		$tmp1 = implode(' and ', $tmp1);
+
+		$other = $this->formatOhterCondition($other);
+
+		$sql = "DELETE FROM `{$tableName}` WHERE {$tmp1} {$other}";
+		return $this->query($sql, $tmp2);
+	}
+
+	/**
+	 * @desc	开启事务
+	 * @return mixed
+	 */
+	public function beginTransaction()
+	{
+		return self::$pdo->beginTransaction();
+	}
+
+	/**
+	 * @desc	提交事务
+	 * @return mixed
+	 */
+	public function executeTransaction()
+	{
+		return self::$pdo->commit();
+	}
+
+	/**
+	 * @desc	回滚事务
+	 * @return mixed
+	 */
+	public function rollBack()
+	{
+		return self::$pdo->rollBack();
 	}
 
 	/**
