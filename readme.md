@@ -34,6 +34,41 @@ $obj = new Db_mysql_pdo('user');
 $pdo = new Db_mysql_pdo();
 ```
 
+##### 执行一条SQL语句
+```
+$pdo = new Db_mysql_pdo();
+$pdo->queryquery($sql, $parameters = array(), $fetchmode = PDO::FETCH_ASSOC);
+```
+由于个人比较偏爱写原生的select SQL，所以没有封装关于select的方法
 
+##### 插入一条记录
+```
+$pdo = new Db_mysql_pdo();
+$pdo->insert($tableName, array $data);
+```
+
+##### 插入多条记录
+```
+$pdo = new Db_mysql_pdo();
+$pdo->insertBatch($tableName, array $data);
+```
+
+##### 获取插入的最后ID值
+```
+$pdo = new Db_mysql_pdo();
+$pdo->lastInsertId();
+```
+
+##### 更新
+```
+$pdo = new Db_mysql_pdo();
+$pdo->update($tableName, array $where, array $data, array $other=array());
+```
+
+##### 删除
+```
+$pdo = new Db_mysql_pdo();
+$pdo->delete($tableName, array $where, array $other=array());
+```
 
 持续更新中......
