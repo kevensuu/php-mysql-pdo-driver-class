@@ -103,29 +103,12 @@ class Db_mysql_pdo
 	}
 
 	/**
-	 * @desc	查询
-	 * @param       $tableName	表名
-	 * @param array $fields		查询的字段数组
-	 * @param       $where		参照  formatWhere 中的参数说明
-	 * @param array $other		参照  formatOhterCondition 中的参数说明
-	 * @return null
-	 */
-	public function select($tableName, array $fields, $where, array $other = array())
-	{
-		$fields = (!$fields) ? '*' : trim(implode('`,`', $fields), '`');
-		$where = $this->formatWhere($where);
-		$other = $this->formatOhterCondition($other);
-		$sql = "select {$fields} from {$tableName} {$where} {$other}";
-		return $this->query($sql);
-	}
-
-	/**
 	 * @desc 添加一条记录
 	 * @param string $tableName 数据库表名
 	 * @param array  $data      需要添加的数据，如：array('field1'=>'value1', 'field2'=>'value2')
 	 * @return int 返回影响行数
 	 */
-	public function insert($tableName, $data)
+	public function insert($tableName, array $data)
 	{
 		$fields = '`' . implode('`,`', array_keys($data)) . '`';
 		$values = implode(',', array_fill(0, count($data), '?'));
@@ -139,11 +122,10 @@ class Db_mysql_pdo
 	 * @param array  $data      需要添加的数据，为一个二维数组，如：$data = array(array('fileld1'=>'value1','fileld2'=>'value2'),array('fileld1'=>'value1','fileld2'=>'value2'))
 	 * @return int 返回影响行数
 	 */
-	public function insertBatch($tableName, $data)
+	public function insertBatch($tableName, array $data)
 	{
 		$fields = '`' . implode('`,`', array_keys($data[0])) . '`';
-		$tmp  = array();
-		$tmp2 = array();
+		$tmp  = $tmp2 = array();
 		foreach($data as $value)
 		{
 			$tmp[] = implode(',', array_fill(0, count($value), '?'));

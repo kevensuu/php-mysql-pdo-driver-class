@@ -29,4 +29,11 @@ $obj = new Db_mysql_pdo('user');
 
 ### PDO操作类 Db_mysql_pdo
 
+##### 获取PDO对象
+```
+$pdo = new Db_mysql_pdo();
+```
+
+
+
 持续更新中......
