@@ -1,0 +1,7 @@
+{
+    "name": "kevensuu/php-mysql-pdo-driver-class",
+    "require": {
+        "php": ">=5.3.0",
+        "another-vendor/package": "1.*"
+    }
+}
