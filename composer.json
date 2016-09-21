@@ -4,7 +4,7 @@
     "keywords": ["php","mysql", "pdo"],
     "homepage": "https://github.com/kevensuu/php-mysql-pdo-driver-class",
     "require": {
-        "php": ">=5.2.0",
+        "php": ">=5.2.0"
     },
     "license": "MIT",
     "authors": [
