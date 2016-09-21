@@ -1,7 +1,16 @@
 {
-    "name": "kevensuu/php-mysql-pdo-driver-class",
+    "name": "php-mysql-pdo-driver-class",
+    "description": "php-mysql-pdo-driver-class",
+    "keywords": ["php","mysql", "pdo"],
+    "homepage": "https://github.com/kevensuu/php-mysql-pdo-driver-class",
     "require": {
-        "php": ">=5.3.0",
-        "another-vendor/package": "1.*"
-    }
+        "php": ">=5.2.0",
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kevensuu",
+            "email": "kevensuu@gmail.com"
+        }
+    ]
 }
