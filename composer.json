@@ -1,5 +1,5 @@
 {
-    "name": "php-mysql-pdo-driver-class",
+    "name": "kevensuu/php-mysql-pdo-driver-class",
     "description": "php-mysql-pdo-driver-class",
     "keywords": ["php","mysql", "pdo"],
     "homepage": "https://github.com/kevensuu/php-mysql-pdo-driver-class",
