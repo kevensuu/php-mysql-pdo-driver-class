@@ -14,8 +14,8 @@
         }
     ],
     "autoload-dev": {
-        "psr-0": {
-            "Mysql\\": "src/"
+        "psr-4": {
+            "Mysql\\": "src"
         }
     }
 }
