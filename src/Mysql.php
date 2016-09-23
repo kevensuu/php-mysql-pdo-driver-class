@@ -4,13 +4,13 @@
  * User: Kevensuu
  * Date: 2016-09-23 11:10
  */
-namespace yaf\mysql;
+namespace Mysql;
 
 /**
  * Class Yaf_mysql
  * @desc mysql operation library
  */
-class Yaf_mysql
+class Mysql
 {
     /**
      * @desc	配置信息
