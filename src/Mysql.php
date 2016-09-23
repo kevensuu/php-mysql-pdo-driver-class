@@ -4,7 +4,7 @@
  * User: Kevensuu
  * Date: 2016-09-23 11:10
  */
-namespace Mysql;
+namespace Mysql\Mysql;
 
 /**
  * Class Yaf_mysql
