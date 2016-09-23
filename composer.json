@@ -13,7 +13,7 @@
             "email": "kevensuu@gmail.com"
         }
     ],
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
             "Mysql\\": "src/Mysql/"
         }
